@@ -13,7 +13,7 @@ VERSION = __version__
 
 URL = "https://github.com/manbehindthemadness/rcache"
 DESCRIPTION = "LRU Cache for TKInter using PIL"
-LONG_DESCRIPTION = """Provides in-memory caching in addition to serialized persistent storage"""
+LONG_DESCRIPTION = """Provides in-memory caching in addition to serialized persistent storage """
 LONG_DESCRIPTION += VERSION
 
 PACKAGES = find_packages(include=['rcache', 'rcache.*'])
