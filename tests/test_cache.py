@@ -72,6 +72,15 @@ def test_unusable_file_substitution():
     assert not diff.getbbox()
 
 
+def test_lru_functionality():
+    """
+    This just ensures that we are properly cleaning up images after we hit the maximum configured value.
+    """
+    os.rename(Path(CACHE_DIR / 'good.png'), Path(CACHE_DIR / 'good_2.png'))
+    CACHE.refresh()
+    assert len(CACHE.cache.keys()) == 2
+
+
 def test_clear():
     """
     See if we can clear out the cache properly.
