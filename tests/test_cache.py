@@ -63,7 +63,7 @@ def test_image_debug():
 
 def test_unusable_file_substitution():
     """
-    This will prove that usable images will be substitutes with the error icon so, they can be easily identified
+    This will prove that usable images will be substituted with the error icon so, they can be easily identified
     on the UX for troubleshooting.
     """
     image_data = CACHE.get('bad')
