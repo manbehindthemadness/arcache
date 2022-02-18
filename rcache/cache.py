@@ -5,7 +5,6 @@ This provides a handy image cache for PIL heavy TKInter work.
 import os
 import shutil
 import configparser
-import sysconfig
 from pathlib import Path
 from pickle import dump, load, UnpicklingError
 from collections import OrderedDict
