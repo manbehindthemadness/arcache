@@ -3,39 +3,32 @@
 Setup
 """
 
+import sys
+import os
 from setuptools import setup, find_packages
 
-NAME = "RCache"
+NAME = "rcache"
 
 __version__ = "0.1"
 VERSION = __version__
 
 
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, 'README.md')) as f:
+    README = f.read()
+
+
 URL = "https://github.com/manbehindthemadness/rcache"
 DESCRIPTION = "LRU Cache for TKInter using PIL"
-LONG_DESCRIPTION = """Provides in-memory caching in addition to serialized persistent storage """
-LONG_DESCRIPTION += VERSION
+LONG_DESCRIPTION = """Provides in-memory caching in addition to serialized persistent storage"""
 
-PACKAGES = find_packages(include=['rcache', 'rcache.*'])
+PACKAGES = find_packages()
 
-classifiers = [
-    # Get more strings from
-    # http://www.python.org/pypi?%3Aaction=list_classifiers
-    "License :: OSI Approved :: BSD License",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-]
+if sys.version_info < (3, 5):
+    sys.exit('Sorry, Python < 3.5 is not supported')
 
 install_requires = [
-    "python_version > '3.4'"
+    "Pillow >= 8"
 ]
 
 setup(
@@ -44,12 +37,13 @@ setup(
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/x-rst",
-    python_requires=">=3.5",
-    classifiers=classifiers,
     keywords="tkinter, pil, cache",
     author="manbehindthemadness",
+    author_email="manbehindthemadness@gmail.com",
     url=URL,
-    license="BSD",
+    license="MIT",
     packages=PACKAGES,
     install_requires=install_requires,
+    package_dir={'': 'src'},
+    py_modules=['rcache']
 )

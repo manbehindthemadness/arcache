@@ -24,6 +24,7 @@ pilimg = type(Image)
 def config(config_file: Path = DEFAULTS, section: str = 'cache') -> configparser:
     """
     This will grab our settings.
+    TODO: We should move this into our larger config parser deal at a later time.
     :return: configparser
     """
     cfg = configparser.ConfigParser()
