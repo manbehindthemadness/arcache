@@ -10,10 +10,6 @@ from pathlib import Path
 from pickle import dump, load, UnpicklingError
 from collections import OrderedDict
 from PIL import Image, UnidentifiedImageError, PngImagePlugin
-try:
-    from ImageTK import ImageTk
-except ImportError:
-    from .ImageTK import ImageTk
 
 
 WORKING_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -216,4 +212,14 @@ class Cache:
             resave = True
         if resave:
             self.save_cache_file()
+        return self
+
+    def clear(self, persistent: bool = False):
+        """
+        This allows us to clear the cache contents,
+        if persistent is set to True the saved cache file will also be removed.
+        """
+        self.cache = OrderedDict()
+        if persistent:
+            os.remove(self.cache_file)
         return self

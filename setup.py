@@ -44,7 +44,8 @@ if sys.version_info < (3, 5):
     sys.exit('Sorry, Python < 3.5 is not supported')
 
 install_requires = [
-    "Pillow >= 8"
+    "Pillow >= 8",
+    "pytest",
 ]
 
 setup(
