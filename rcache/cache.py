@@ -56,30 +56,39 @@ class Cache:
     """
     cache_loaded = False
 
-    def __init__(self, config_file: Path = DEFAULTS):
+    def __init__(self, config_file: Path = DEFAULTS, debug: bool = False):
         self.env = prep_env
         self.dir = self.env(config_file)
         self.cache = OrderedDict()
         self.cache_file = self.dir.stem + '.bin'
         self.config = config(config_file)
         self.capacity = self.config['cache_max']
-        self.error_file = Path(str(sysconfig.get_paths()["purelib"]) + '/err.png')
+        self.error_file = Path(os.path.abspath(os.path.dirname(__file__)) + '/err.png')
+        self.debug = debug
+
+    def log(self, *args, **kwargs):
+        """
+        This is just for debug messages.
+        """
+        if self.debug:
+            print(*args, **kwargs)
+        return self
 
     def trim(self):
         """
         resizes the cache to fit params.
         """
         trim = False
-        print('cache size', len(self.cache))  # TODO: Remove after testing.
+        self.log('cache size', len(self.cache))
         if len(self.cache) > self.capacity:
-            print('trimming cache')
+            self.log('trimming cache')
             trim = True
 
         while len(self.cache) > self.capacity:
             self.cache.popitem(last=False)
 
         if trim:
-            print('trimmed to', len(self.cache))  # TODO: Remove after testing.
+            self.log('trimmed to', len(self.cache))
 
     def get(self, key: [int, str]):
         """
@@ -117,7 +126,7 @@ class Cache:
         """
         In the event we are using a cached bin file, this will save / update it.
         """
-        print('saving cache bin')
+        self.log('saving cache bin')
         self.trim()
         with open(self.cache_file, "wb") as cache_file:
             dump(self.cache, cache_file)
@@ -129,7 +138,7 @@ class Cache:
         load the cache file.
         """
         if not self.cache_loaded:
-            print('loading cache from bin')
+            self.log('loading cache from bin')
             with open(self.cache_file, 'rb') as cache_file:
                 self.cache = load(cache_file)
                 cache_file.close()
@@ -164,7 +173,7 @@ class Cache:
                 im = Image.open(file)
             except UnidentifiedImageError as err:
                 im = Image.open(self.error_file)
-                print('RCACHE FAILED TO REFRESH:', err, file)
+                self.log('RCACHE FAILED TO REFRESH:', err, file)
                 if self.config['debug_images']:
                     shutil.copy(self.dir / filename, Path(self.config['error_dir']))
             im.load()
@@ -190,13 +199,13 @@ class Cache:
             try:
                 self.load_cache_file()
             except (EOFError, UnpicklingError)as err:
-                print(err, 'image cache-file damaged, recreating')
+                self.log(err, 'image cache-file damaged, recreating')
                 os.remove(self.cache_file)
         else:
-            print('loading cache from file system')
+            self.log('loading cache from file system')
         cache = os.listdir(self.dir)
         if len(cache) > 0:
-            print('importing new images')
+            self.log('importing new images')
         for item in cache:
             name = item.split('.')[0]
             it = {
