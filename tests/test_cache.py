@@ -87,12 +87,3 @@ def test_clear():
     """
     CACHE.clear(persistent=True)
     assert not len(CACHE.cache.keys()) and not CACHE_BIN.is_file()
-
-
-def test_cleanup():
-    """
-    This is a dummy test used to clean up the leftovers.
-    """
-    shutil.rmtree(ERROR_DIR)
-    shutil.rmtree(CACHE_DIR)
-    assert True

@@ -3,16 +3,19 @@
 This will put our slug cache through some simple unit-tests.
 """
 import os
+import time
 import shutil
 from pathlib import Path
 from PIL import Image
 from rcache.ImageTK import ImageTk
-from rcache.cache import SlugCache
+from rcache.cache import SlugCache, get_name
 
 
+time.sleep(3)
 HERE = os.path.abspath(os.path.dirname(__file__))
 CACHE = SlugCache(config_file=Path(HERE + '/config.ini'), debug=True)
 ico = Path(HERE + '/round.png')
+kwargs = dict()
 
 
 def icon(file: [str, Path], fill: str, size: int, image: Image = None, raw: bool = False) -> Image:
@@ -35,8 +38,9 @@ def kwarg_slugging(image: [Image, None] = None, raw: bool = True):
     """
     This will take the icon creation function above and use it as a sluggable callback into our cache,
     """
+    global kwargs
     kwargs = {
-        'file': 'round.png',
+        'file': ico,
         'fill': 'green',
         'size': 100,
         'image': image,
@@ -59,7 +63,9 @@ def test_slug():
     """
     Confirm that our diagnostic image exists and is properly named.
     """
-    assert Path(HERE + '/.imgcache/icon-file-roundptpng-fill-green-size-100-image-none-raw-true.png').is_file()
+    global kwargs
+    file = Path(HERE + '/.imgcache/icon-' + get_name(kwargs) + '.png')
+    assert file.is_file()
 
 
 def test_fetch_from_slug():
