@@ -72,7 +72,7 @@ def test_fetch_from_slug():
     """
     This will re-open the test file and confirm that the kwargs are being evaluated correctly.
     """
-    kwarg_slugging()  # noqa
+    kwarg_slugging()
     assert CACHE.from_memory
 
 
@@ -81,7 +81,6 @@ def test_cleanup():
     Dummy test to clean up the leftovers.
     """
     cache = CACHE
-    cache = cache  # Debug hook  noqa
     cache.clear(persistent=True)
     shutil.rmtree(Path(HERE + '/.imgcache'))
     shutil.rmtree(Path(HERE + '/rcache_errors'))

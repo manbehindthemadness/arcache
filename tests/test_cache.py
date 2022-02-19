@@ -78,7 +78,7 @@ def test_lru_functionality():
     """
     os.rename(Path(CACHE_DIR / 'good.png'), Path(CACHE_DIR / 'good_2.png'))
     CACHE.refresh()
-    assert len(CACHE.cache.keys()) == 2
+    assert len(CACHE.cache.keys()) == 2 and 'bad' not in CACHE.cache.keys()
 
 
 def test_clear():
