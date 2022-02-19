@@ -93,7 +93,7 @@ Examples
    }
    image_tk = SlugCache(callback, *args, **kwargs)
 
-``Updating, saving and clearing the cache contents:``
+``Updating, saving, and clearing the cache contents:``
 
 .. code-block:: pycon
 
