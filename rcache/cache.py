@@ -3,12 +3,19 @@
 This provides a handy image cache for PIL heavy TKInter work.
 """
 import os
+import re
 import shutil
 import configparser
+import unicodedata
+import logging  # noqa
 from pathlib import Path
 from pickle import dump, load, UnpicklingError
 from collections import OrderedDict
 from PIL import Image, UnidentifiedImageError, PngImagePlugin
+try:
+    from ImageTK import ImageTk
+except ImportError:
+    from .ImageTK import ImageTk
 
 
 WORKING_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__)))
@@ -49,6 +56,66 @@ def prep_env(config_file: Path = DEFAULTS, reload: bool = False) -> Path:
     return img_cache
 
 
+def clean_args(args: list, kwargs: dict, exclusive: bool = False) -> dict:
+    """
+    Removes keys to prevent errors.
+    """
+    kargs = list(kwargs.keys())
+    if exclusive:
+        for arg in kargs:
+            if arg not in args:
+                del kwargs[arg]
+    else:
+        for arg in args:
+            try:
+                del kwargs[arg]
+            except KeyError:
+                pass
+    return kwargs
+
+
+def get_args(args: list, kwargs: dict, clean: bool = False) -> list:
+    """
+    This will fetch arguments and jazz.
+    """
+    values = list()
+    for arg in args:
+        if arg in kwargs:
+            values.append(kwargs[arg])
+        else:
+            values.append(None)
+    if clean:
+        clean_args(args, kwargs)
+    if len(values) == 1:
+        values = values[0]
+    return values
+
+
+def slugify(value, allow_unicode=False):
+    """
+    Taken from https://github.com/django/django/blob/master/django/utils/text.py
+    Convert to ASCII if 'allow_unicode' is False. Convert spaces or repeated
+    dashes to single dashes. Remove characters that aren't alphanumerics,
+    underscores, or hyphens. Convert to lowercase. Also strip leading and
+    trailing whitespace, dashes, and underscores.
+    """
+    value = str(value).replace('-', 'ng').replace('.', 'pt')
+    if allow_unicode:
+        value = unicodedata.normalize('NFKC', value)
+    else:
+        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
+    value = re.sub(r'[^\w\s-]', '', value.lower())
+    return re.sub(r'[-\s]+', '-', value).strip('-_')
+
+
+def get_name(args: [list, tuple, dict]) -> str:
+    """
+    This created a name based on passed arguments (handy for caching by config).
+    """
+    name = slugify(args)
+    return name
+
+
 class Cache:
     """
     This provides the LRU cache logic.
@@ -64,13 +131,23 @@ class Cache:
         self.capacity = self.config['cache_max']
         self.error_file = Path(os.path.abspath(os.path.dirname(__file__)) + '/err.png')
         self.debug = debug
+        self.refresh()
 
     def log(self, *args, **kwargs):
         """
-        This is just for debug messages.
+        Really simple-ass logger.
         """
-        if self.debug:
-            print(*args, **kwargs)
+        message = str()
+        for arg in args:
+            message += str(arg) + ' '
+        level = get_args(
+            ['level'],
+            kwargs
+        )
+        if not level:
+            level = 'info'
+        cmd = 'logging.' + level + '(message)'
+        exec(cmd)
         return self
 
     def trim(self):
@@ -183,6 +260,8 @@ class Cache:
         del file
         if single:
             self.cache.update(passthrough)
+        if not os.path.isfile(self.cache_file):
+            self.save_cache_file()
         return passthrough
 
     def refresh(self, resave: bool = False):
@@ -229,5 +308,81 @@ class Cache:
         """
         self.cache = OrderedDict()
         if persistent:
-            os.remove(self.cache_file)
+            if os.path.isfile(self.cache_file):
+                os.remove(self.cache_file)
+            # self.env(reload=True)
         return self
+
+
+class SlugCache(Cache):
+    """
+    This will allow us to store and update our images to reduce cpu overhead.
+    """
+    from_memory = False  # This is used as signal for unit testing
+
+    def __init__(self, config_file: Path = DEFAULTS, debug: bool = False):
+        Cache.__init__(self, config_file, debug)
+        self.log('searching for cache file')
+        self.temp = dict()
+
+    def save_image(self, image: [ImageTk.PhotoImage, Image.Image], filename: str):
+        """
+        This will either save the image to file or directly into cache.
+        """
+        if self.config['debug_images']:
+            if isinstance(image, Image.Image):
+                image.save(self.dir / filename, "PNG")
+            else:
+                image._PhotoImage__photo.write(self.dir / filename)  # noqa
+        else:
+            self.cache.load_image(file=image.image, filename=filename)  # noqa
+        return self
+
+    def provide(self, callback, *args, **kwargs) -> Image:
+        """
+        This will check to see if the callback output is already in the cache and if so return it,
+            Otherwise the callback will be executed, the results returned, and then cached.
+        """
+        if 'exclude' in kwargs.keys():
+            exclusions = kwargs['exclude']
+            exclusions.append('exclude')
+            kwargs = clean_args(
+                exclusions,
+                kwargs
+            )
+        raw, no_cache = get_args(
+            ['raw', 'no_cache'],
+            kwargs
+        )
+        item = get_name((callback.__name__, args, kwargs))
+        filename = item + '.png'  # TODO: We might want to make the file extensions configurable in the future.
+        save = True
+        if item in self.cache.keys() and not no_cache:
+            filename = self.cache.get(item)['filename']
+            if 'body' in self.cache.get(item).keys():
+                self.log('loading image from memory')
+                self.from_memory = True
+                image = self.cache.get(item)['body']  # Load from memory.
+                image.load()  # Load image into memory and close.
+            else:
+                self.log('loading image from file')
+                self.from_memory = False
+                image = Image.open(self.dir / filename)  # Load from file.
+                image.load()  # Load image into memory and close.
+                self.cache.get(item)['body'] = image  # Save to memory if not present.
+            kwargs['image'] = image
+            save = False
+        image = callback(*args, **kwargs)
+        if image and isinstance(image, ImageTk.PhotoImage) and save and not no_cache:
+            if 0 not in [image.width(), image.height()]:
+                self.save_image(image, filename)
+                save = False
+            else:
+                self.log('zero dimension found in', filename)
+        if not isinstance(image, ImageTk.PhotoImage) and not raw and image:
+            image = ImageTk.PhotoImage(image)
+        if save and image:
+            self.save_image(image, filename)
+            if not os.path.isfile(self.cache_file):
+                self.refresh(resave=True)
+        return image
