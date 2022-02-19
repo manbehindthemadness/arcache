@@ -10,16 +10,24 @@ Welcome to rcache's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+Github
+------
+
+https://github.com/manbehindthemadness/rcache
+
+Description
+-----------
+
 A serialized slug-cache for Python using PIL and TKinter.
 
-RCache is designed to take image generation logic in the form of a callback and "slugify" the output. It will then key
-it using the name, file, and arguments. This allows for many variations of smaller image "constructors" to be
-stored for rapid use when producing more complex composites.
+RCache is designed to take image generation logic in the form of a callback and "slugify" the the name and arguments.
+It will then use this to key the output into a pickled memory cache housed with an OrderedDict() object.
+This allows for many variations of smaller image "constructors" to be stored for reuse when producing more complex composites.
 
 Placement
 ---------
 
-constructor << rcache << element << widget << canvas
+constructor -> rcache -> element -> widget -> canvas
 
 .. image:: _static/placement.png
 
@@ -27,7 +35,9 @@ Config
 ------
 
 RCache's configuration file is specified as an argument when either the Cache or SlugCache classes are initialized.
-If no file is specified the defaults.ini will be used instead:
+If no file is specified the defaults.ini will be used instead.
+
+``config file:``
 
 .. code-block:: ini
 
@@ -62,7 +72,6 @@ Examples
       image = Image.new("RGB", (size, size), fill)
       image.putalpha(mask)
       return image
-
 
    def make_icon(**kwargs)
       """
@@ -100,7 +109,7 @@ Examples
    >>> from pathlib import Path
    >>> from rcache.cache import SlugCache
    >>> cache = SlugCache(Path('my_config.ini'))  # Initialize the cache (This also performs a cache.refresh; however, we show it below for the sake of the example).
-   >>> cache.refresh()  # This rescans all configured cache_dir folder for new images.
+   >>> cache.refresh()  # This rescans the configured cache_dir folder and imports new images.
    >>> cache.save_file()  # Save the cache contents (alternatively this can be accomplished with "cache.refresh(resave=True)").
    >>> cache.clear(persistent=True)  # When persistent is set both the memory and file caches will be cleared.
 
