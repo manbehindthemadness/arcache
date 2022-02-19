@@ -310,7 +310,6 @@ class Cache:
         if persistent:
             if os.path.isfile(self.cache_file):
                 os.remove(self.cache_file)
-            # self.env(reload=True)
         return self
 
 
@@ -318,7 +317,7 @@ class SlugCache(Cache):
     """
     This will allow us to store and update our images to reduce cpu overhead.
     """
-    from_memory = False  # This is used as signal for unit testing
+    from_memory = False  # This is used as signal for unit testing.
 
     def __init__(self, config_file: Path = DEFAULTS, debug: bool = False):
         Cache.__init__(self, config_file, debug)

@@ -31,7 +31,7 @@ def icon(file: [str, Path], fill: str, size: int, image: Image = None, raw: bool
     return image
 
 
-def kwarg_slugging(image: [Image, None] = None):
+def kwarg_slugging(image: [Image, None] = None, raw: bool = True):
     """
     This will take the icon creation function above and use it as a sluggable callback into our cache,
     """
@@ -40,7 +40,7 @@ def kwarg_slugging(image: [Image, None] = None):
         'fill': 'green',
         'size': 100,
         'image': image,
-        'raw': True
+        'raw': raw
     }
     return CACHE.provide(icon, *[], **kwargs)
 
