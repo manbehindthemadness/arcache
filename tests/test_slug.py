@@ -55,7 +55,7 @@ def test_open():
     composite, and then confirm that we are loading that composite from the file system.
     """
     image = kwarg_slugging()  # noqa
-    image.show()
+    # image.show()
     assert not CACHE.from_memory
 
 

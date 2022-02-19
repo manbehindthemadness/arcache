@@ -46,6 +46,7 @@ if sys.version_info < (3, 5):
 install_requires = [
     "Pillow >= 8",
     "pytest",
+    "sphinx"
 ]
 
 setup(

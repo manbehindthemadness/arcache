@@ -166,7 +166,7 @@ class Cache:
         if trim:
             self.log('trimmed to', len(self.cache))
 
-    def get(self, key: [int, str]):
+    def get(self, key: [int, str]) -> [int, dict]:
         """
         This fetches items from the cache.
         """
@@ -176,13 +176,14 @@ class Cache:
             self.cache.move_to_end(key)
             return self.cache[key]
 
-    def put(self, key: [int, str], value) -> None:
+    def put(self, key: [int, str], value):
         """
         This stores items into the cache.
         """
         self.cache[key] = value
         self.cache.move_to_end(key)
         self.trim()
+        return self
 
     def keys(self) -> list:
         """
@@ -260,7 +261,7 @@ class Cache:
         del file
         if single:
             self.cache.update(passthrough)
-        if not os.path.isfile(self.cache_file):
+        if not Path(self.cache_file).is_file():
             self.save_cache_file()
         return passthrough
 
@@ -273,7 +274,7 @@ class Cache:
         """
         if self.config['purge_cache_on_startup'] and os.path.isfile(self.cache_file):  # Debugging.
             os.remove(self.cache_file)
-        if os.path.isfile(self.cache_file):
+        if Path(self.cache_file).is_file():
             try:
                 self.load_cache_file()
             except (EOFError, UnpicklingError)as err:
@@ -308,7 +309,7 @@ class Cache:
         """
         self.cache = OrderedDict()
         if persistent:
-            if os.path.isfile(self.cache_file):
+            if Path(self.cache_file).is_file():
                 os.remove(self.cache_file)
         return self
 
