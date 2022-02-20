@@ -6,14 +6,14 @@ import os
 import shutil
 from pathlib import Path
 from PIL import Image, ImageChops
-from rcache import Cache
+from arcache import Cache
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 CACHE = Cache(config_file=Path(HERE + '/config.ini'), debug=True)
 CACHE_BIN = Path(HERE + '/.imgcache.bin')
 CACHE_DIR = Path(HERE + '/.imgcache')
-ERROR_DIR = Path(HERE + '/rcache_errors')
+ERROR_DIR = Path(HERE + '/arcache_errors')
 GOOD = Image.open(Path(HERE + '/good.png'))
 ERR = Image.open(Path(HERE + '/err.png'))
 

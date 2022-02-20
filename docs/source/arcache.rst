@@ -1,5 +1,5 @@
-rcache package
-==============
+arcache package
+===============
 
 Submodules
 ----------
@@ -7,13 +7,13 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   rcache.ImageTK
-   rcache.cache
+   arcache.ImageTK
+   arcache.cache
 
 Module contents
 ---------------
 
-.. automodule:: rcache
+.. automodule:: arcache
    :members:
    :undoc-members:
    :show-inheritance:

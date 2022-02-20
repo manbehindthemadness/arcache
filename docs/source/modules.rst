@@ -1,7 +1,7 @@
-rcache
-======
+arcache
+=======
 
 .. toctree::
    :maxdepth: 4
 
-   rcache
+   arcache

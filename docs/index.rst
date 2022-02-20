@@ -10,28 +10,28 @@
 Home
 ------
 
-https://github.com/manbehindthemadness/rcache
+https://github.com/manbehindthemadness/arcache
 
 Description
 -----------
 
 A serialized slug-cache for Python using PIL and TKinter.
 
-RCache is designed to take image generation logic in the form of a callback and "slugify" the name and arguments.
+ARCache is designed to take image generation logic in the form of a callback and "slugify" the name and arguments.
 It will then use this to key the output into a pickled memory cache housed within an ``OrderedDict()``.
 This allows for many variations of smaller image "constructors" to be stored for reuse when producing more complex composites.
 
 Placement
 ---------
 
-constructor -> rcache -> element -> widget -> canvas
+constructor -> arcache -> element -> widget -> canvas
 
 .. image:: _static/placement.png
 
 Config
 ------
 
-RCache's configuration file is specified as an argument when either the Cache or SlugCache classes are initialized.
+ARCache's configuration file is specified as an argument when either the Cache or SlugCache classes are initialized.
 If no file is specified defaults.ini will be used instead.
 
 **config file:**
@@ -40,7 +40,7 @@ If no file is specified defaults.ini will be used instead.
 
    [cache]
    cache_dir = '.imgcache'             # Images will optionally be stored and read from here when debug_images is set to True
-   error_dir = 'rcache_errors'         # Images that fail to load will be place here to allow for inspection.
+   error_dir = 'arcache_errors'        # Images that fail to load will be place here to allow for inspection.
    preload = True                      # When set to True we will scan and update the cache during initialization.
    cache_max = 5000                    # Specified the maximum number of items the cache will allow.
    debug_images = True                 # When set to True processed images will be left in the cache_dir for easy review.
@@ -55,7 +55,7 @@ Examples
 
    import os
    from PIL import Image
-   from rcache import SlugCache
+   from arcache import SlugCache
 
    cache = SlugCache(config_file=os.path.abspath(os.path.dirname(__file__)) + '/my_config.ini')
 
@@ -105,25 +105,42 @@ Examples
 .. code-block:: pycon
 
    >>> from pathlib import Path
-   >>> from rcache.cache import SlugCache
+   >>> from arcache.cache import SlugCache
    >>> cache = SlugCache(Path('my_config.ini'))  # Initialize the cache (This also performs a cache.refresh; however, we show it below for the sake of the example).
    >>> cache.refresh()  # This rescans the configured cache_dir folder and imports new images.
    >>> cache.save_file()  # Save the cache contents (alternatively this can be accomplished with "cache.refresh(resave=True)").
    >>> cache.clear(persistent=True)  # When persistent is set both the memory and file caches will be cleared.
 
+Kwargs
+------
+
+* ``raw`` - Toggles returning ``ImageTk`` *(False)* and ``PIL.Image`` *(True)*
+* ``no_cache`` - Will bypass all caching operations and just return the image
+* ``debug`` - Enables logging.
+
+Returns
+-------
+
+* ``-1`` - Nonexistent key
+* |err|  - Attempt to load unreadable data
+* ``PIL.Image`` - Conventional Pillow image object
+* ``arcache.ImageTK.ImageTk`` - A slightly altered ``TKinter.ImageTk`` that retains the original ``PIL.Image`` as ``self.image``
+
+.. |err| image:: _static/err.png
+
 Installation
 ------------
 
-RCache can be installed using pip:
+ARCache can be installed using pip:
 
-``pip install rcache``
+``pip install arcache``
 
 or alternatively:
 
 .. code-block:: sh
 
-   git clone https://github.com/manbehindthemadness/rcache.git
-   cd rcache
+   git clone https://github.com/manbehindthemadness/arcache.git
+   cd arcache
    python setup.py install
 
 

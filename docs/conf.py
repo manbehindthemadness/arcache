@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-rcache documentation build configuration file
+arcache documentation build configuration file
 """
 
 import os
@@ -33,7 +33,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'rcache'
+project = 'arcache'
 copyright = '2022, Kevin Eales'
 author = 'Kevin Eales'
 
@@ -113,7 +113,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'rcache.tex', 'rcache Documentation',
+    (master_doc, 'arcache.tex', 'arcache Documentation',
      'Kevin (eales)', 'manual'),
 ]
 
@@ -123,7 +123,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'rcache', 'rcache Documentation',
+    (master_doc, 'arcache', 'arcache Documentation',
      [author], 1)
 ]
 
@@ -134,8 +134,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'rcache', 'rcache Documentation',
-     author, 'rcache', 'One line description of project.',
+    (master_doc, 'arcache', 'arcache Documentation',
+     author, 'arcache', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -147,7 +147,7 @@ def run_apidoc(_):
     import shutil
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
     cur_dir = os.path.abspath(os.path.dirname(__file__))
-    module = '../rcache/'
+    module = '../arcache/'
     output_path = os.path.join(cur_dir, 'source')
     main(['-o', output_path, module, '--force', '--separate'])
 
@@ -167,4 +167,4 @@ def setup(app):
 
 
 autoclass_content = 'both'
-autodoc_mock_imports = ["rcache.tools"]
+autodoc_mock_imports = ["arcache.tools"]

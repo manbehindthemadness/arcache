@@ -7,8 +7,8 @@ import time
 import shutil
 from pathlib import Path
 from PIL import Image
-from rcache.ImageTK import ImageTk
-from rcache.cache import SlugCache, get_name
+from arcache.ImageTK import ImageTk
+from arcache.cache import SlugCache, get_name
 
 
 time.sleep(3)
@@ -83,5 +83,5 @@ def test_cleanup():
     cache = CACHE
     cache.clear(persistent=True)
     shutil.rmtree(Path(HERE + '/.imgcache'))
-    shutil.rmtree(Path(HERE + '/rcache_errors'))
+    shutil.rmtree(Path(HERE + '/arcache_errors'))
     assert True

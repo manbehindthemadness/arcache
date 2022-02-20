@@ -370,7 +370,6 @@ class SlugCache(Cache):
                 image = Image.open(self.dir / filename)  # Load from file.
                 image.load()  # Load image into memory and close.
                 self.cache.get(item)['body'] = image  # Save to memory if not present.
-            kwargs['image'] = image
             save = False
         image = callback(*args, **kwargs)
         if image and isinstance(image, ImageTk.PhotoImage) and save and not no_cache:

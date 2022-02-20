@@ -7,7 +7,7 @@ import sys
 import os
 from setuptools import setup
 
-NAME = "rcache"
+NAME = "arcache"
 
 
 def get_version(package):
@@ -50,8 +50,8 @@ install_requires = [
 ]
 
 setup(
-    name="rcache",
-    version=get_version("rcache"),
+    name="arcache",
+    version=get_version("arcache"),
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
@@ -60,8 +60,8 @@ setup(
     author_email="manbehindthemadness@gmail.com",
     url=URL,
     license="MIT",
-    packages=get_packages('rcache'),
+    packages=get_packages('arcache'),
     install_requires=install_requires,
     include_package_data=True,
-    package_data={'rcache': ['defaults.ini', 'err.png']}
+    package_data={'arcache': ['defaults.ini', 'err.png']}
 )
