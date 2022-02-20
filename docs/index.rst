@@ -116,7 +116,7 @@ Kwargs
 
 * ``raw`` - Toggles returning ``ImageTk`` *(False)* and ``PIL.Image`` *(True)*
 * ``no_cache`` - Will bypass all caching operations and just return the image
-* ``debug`` - Enables logging.
+* ``debug`` - Enables logging
 
 Returns
 -------
