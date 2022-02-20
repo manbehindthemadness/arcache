@@ -6,6 +6,11 @@ RCache is designed to take image generation logic in the form of a callback and 
 It will then use this to key the output into a pickled memory cache housed within an ``OrderedDict()``.
 This allows for many variations of smaller image "constructors" to be stored for reuse when producing more complex composites.
 
+Readthedocs
+-----------
+
+https://rcache.readthedocs.io/en/latest/?
+
 Placement
 ---------
 
