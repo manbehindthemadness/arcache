@@ -75,7 +75,7 @@ Examples
       'placement': {'x': 25, 'y': 50},  # As these will be unique to where the image is placed but not to the image itself...
       'fill': 'green',
       'outline': 'blue',
-      'exclude': 'placement'  # We tell the cache to ignore the placement coordinates when keying the image.
+      'exclude': ['placement']  # We tell the cache to ignore the placement coordinates when keying the image.
    }
    image_tk = SlugCache(callback, *args, **kwargs)
 ```
