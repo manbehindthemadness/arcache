@@ -17,7 +17,7 @@ Config
 ------
 
 RCache's configuration file is specified as an argument when either the Cache or SlugCache classes are initialized.
-If no file is specified the defaults.ini will be used instead.
+If no file is specified defaults.ini will be used instead.
 
 **config file:**
 ```
