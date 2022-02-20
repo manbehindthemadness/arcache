@@ -17,8 +17,8 @@ Description
 
 A serialized slug-cache for Python using PIL and TKinter.
 
-RCache is designed to take image generation logic in the form of a callback and "slugify" the the name and arguments.
-It will then use this to key the output into a pickled memory cache housed with an OrderedDict() object.
+RCache is designed to take image generation logic in the form of a callback and "slugify" the name and arguments.
+It will then use this to key the output into a pickled memory cache housed within an ``OrderedDict()``.
 This allows for many variations of smaller image "constructors" to be stored for reuse when producing more complex composites.
 
 Placement
@@ -34,7 +34,7 @@ Config
 RCache's configuration file is specified as an argument when either the Cache or SlugCache classes are initialized.
 If no file is specified the defaults.ini will be used instead.
 
-``config file:``
+**config file:**
 
 .. code-block:: ini
 
@@ -48,7 +48,8 @@ If no file is specified the defaults.ini will be used instead.
 
 Examples
 --------
-``basic usage:``
+
+**basic usage:**
 
 .. code-block:: python
 
@@ -86,7 +87,7 @@ Examples
    image = make_icon(**kwargs)  # Can be called many times but will return from cache instead of recomputing the icon.
    image.show()
 
-``Keyword argument filtration:``
+**Keyword argument filtration:**
 
 .. code-block:: python
 
@@ -99,7 +100,7 @@ Examples
    }
    image_tk = SlugCache(callback, *args, **kwargs)
 
-``Updating, saving, and clearing the cache contents:``
+**Updating, saving, and clearing the cache contents:**
 
 .. code-block:: pycon
 
@@ -109,6 +110,23 @@ Examples
    >>> cache.refresh()  # This rescans the configured cache_dir folder and imports new images.
    >>> cache.save_file()  # Save the cache contents (alternatively this can be accomplished with "cache.refresh(resave=True)").
    >>> cache.clear(persistent=True)  # When persistent is set both the memory and file caches will be cleared.
+
+Installation
+------------
+
+RCache can be installed using pip:
+
+``pip install rcache``
+
+or alternatively:
+
+.. code-block:: sh
+
+   git clone https://github.com/manbehindthemadness/rcache.git
+   cd rcache
+   python setup.py install
+
+
 
 Disclaimer
 ----------
